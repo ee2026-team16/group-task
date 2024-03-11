@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 06.03.2024 14:11:58
+// Create Date: 11.03.2024 22:21:04
 // Design Name: 
-// Module Name: flexible_clock_module
+// Module Name: debounce_sim
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,12 +20,24 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module flexible_clock_module(input basys_clock, input [31:0] my_m_value, output reg my_clk = 0);
-    reg [31:0] count = 0;
+module debounce_sim();
+    // input
+    reg basys_clock;
+    reg btn_in;
     
-    always @ (posedge basys_clock)
+    // output
+    wire btn_out;
+    
+    debounce dut(basys_clock, btn_in, btn_out);
+        
+    initial
     begin
-        count <= (count == my_m_value) ? 0 : count + 1;
-        my_clk <= (count == 0) ? ~my_clk: my_clk;
+        btn_in = 0;
+        basys_clock = 0;
+    end
+    
+    always
+    begin
+        basys_clock = ~basys_clock; #5; btn_in = 1;
     end
 endmodule
