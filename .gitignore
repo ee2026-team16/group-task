@@ -1,0 +1,36 @@
+# Gradle build files
+/.gradle/
+/build/
+src/main/resources/docs/
+
+# MacOS custom attributes files created by Finder
+.DS_Store
+*.iml
+bin/
+
+/text-ui-test/ACTUAL.TXT
+text-ui-test/EXPECTED-UNIX.TXT
+
+#self added
+*.class*.[oa]
+*~
+node_modules
+
+# binary files
+*.class
+*.jar
+*.exe
+# temp files
+temp/*.tmp
+ 
+MODS.srcs/sources_1/ip/
+MODS.cache/
+MODS.hw/
+MODS.ip_user_files/
+MODS.runs/
+MODS.xpr
+archive_project_summary.txt
+vivado.jou
+vivado.log
+
+
