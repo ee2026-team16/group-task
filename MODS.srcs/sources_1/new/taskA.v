@@ -3,16 +3,23 @@
 
 // Engineer: Mohamed Abubaker Mustafa Abdelaal Elsayed
 
-module taskA(input clk_25MHz, input [12:0] pixel_index, input btnC, btnD, sw0, output reg [15:0] oled_data);
+module taskA(input basys_clock, clk_25MHz, input [12:0] pixel_index, input btnC, btnD, sw0, output reg [15:0] oled_data);
     parameter BLACK = 16'b00000_000000_00000; // else case
     parameter RED = 16'b11111_000000_00000;
     parameter ORANGE = 16'b11111_011000_00000;
     parameter GREEN = 16'b00000_111111_00000;
     
+    wire clk_1000;
+    flexible_clock flexible_clock_1000 (basys_clock, 49999, clk_1000);
+    
     reg [31:0] x, y;
     reg btnC_pressed = 0, btnD_pressed = 0, btnD_previous = 0;
     reg [1:0] center = 0;
     reg [31:0] count = 0, half_sec_count = 0, btnD_count = 0;
+    
+    wire debounced_btnD;
+    debounce(clk_1000, btnD, debounced_btnD);
+    
     always @ (posedge clk_25MHz)
     begin
         x = pixel_index / 96;
@@ -64,11 +71,11 @@ module taskA(input clk_25MHz, input [12:0] pixel_index, input btnC, btnD, sw0, o
             oled_data <= BLACK;
         end
         
-        if (btnD_previous && !btnD && btnC_pressed) begin
+        if (!debounced_btnD && btnD_previous && btnC_pressed) begin
             btnD_pressed <= 1;
             center <= 0;
         end
         
-        btnD_previous <= btnD;
+        btnD_previous <= debounced_btnD;
     end
 endmodule
