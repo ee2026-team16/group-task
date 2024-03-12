@@ -142,14 +142,17 @@ module Top_Student (
 //    begin
 //        pixel_data <= colour_chooser;
 //    end
+
+    // ---------- tasks ----------
     
-    //  ---------- 4.B ----------
+    wire [15:0] task_a_pixel_data;
+    taskA taskA(clk_25m, pixel_index, btnC, btnD, sw[0], task_a_pixel_data);
     wire [15:0] task_b_pixel_data;
-    basic_task_b(clk, sw[0], btnR, btnL, pixel_index, task_b_pixel_data);
-    
-    // ---------- 4.D ----------
+    taskB taskB(clk, sw[0], btnR, btnL, pixel_index, task_b_pixel_data);
+    wire [15:0] task_c_pixel_data;                                                                        
+    taskC taskC(btnD, clk, pixel_index, task_c_pixel_data);
     wire [15:0] task_d_pixel_data;
-    taskD unit4(.clk_6p25m(clk_6p25m), .pixel_data(task_d_pixel_data), .pixel_index(pixel_index), .btnC(btnC));
+    taskD taskD(clk_6p25m, btnC, pixel_index, task_d_pixel_data);
     
     // ---------- state machine ----------
     reg [31:0] state = 32'b0;
@@ -173,7 +176,9 @@ module Top_Student (
             end
             
         case (state)
+            31'h4A: pixel_data <= task_a_pixel_data;
             31'h4B: pixel_data <= task_b_pixel_data;
+            31'h4C: pixel_data <= task_c_pixel_data;
             31'h4D: pixel_data <= task_d_pixel_data;
             default: pixel_data <= white;
         endcase

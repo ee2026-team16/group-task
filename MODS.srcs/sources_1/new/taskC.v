@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 08.03.2024 16:14:40
+// Create Date: 12.03.2024 11:24:48
 // Design Name: 
-// Module Name: Task4c
+// Module Name: taskC
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,12 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Taskc(
+module taskC(
     input pb,
     input clk,
     input [12:0] pixel_index,
     output [15:0] oleddata
-    );
+);
     reg [15:0] data;
     wire [6:0] x;
     wire [5:0] y;
