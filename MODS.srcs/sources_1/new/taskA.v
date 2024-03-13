@@ -10,7 +10,7 @@ module taskA(input basys_clock, clk_25MHz, input [12:0] pixel_index, input btnC,
     parameter GREEN = 16'b00000_111111_00000;
     
     wire clk_1000;
-    flexible_clock flexible_clock_1000 (basys_clock, 49999, clk_1000);
+    flexible_clock_module flexible_clock_1000 (basys_clock, 49999, clk_1000);
     
     reg [31:0] x, y;
     reg btnC_pressed = 0, btnD_pressed = 0;

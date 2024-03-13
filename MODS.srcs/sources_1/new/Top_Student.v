@@ -115,11 +115,13 @@ module Top_Student (
     
     // ---------- paint ----------
     //  inputs
-    reg enable = 0; // disable = 0
+    wire enable; // disable = 0
+    assign enable = sw[8];
     
     //  outputs
     wire [15:0] colour_chooser;
     
+    wire [6:0] paint_seg;
     //  initialize
     paint(
         .mouse_x(xpos),
@@ -133,7 +135,7 @@ module Top_Student (
         .clk_12p5M(clk_12p5m),
         .clk_6p25M(clk_6p25m),
         .slow_clk(clk_1),
-//        .seg(seg),
+        .seg(paint_seg),
 //        .led(led),
         .colour_chooser(colour_chooser)
     );
@@ -146,7 +148,7 @@ module Top_Student (
     // ---------- tasks ----------
     
     wire [15:0] task_a_pixel_data;
-    taskA taskA(clk_25m, pixel_index, btnC, btnD, sw[0], task_a_pixel_data);
+    taskA taskA(clk, clk_25m, pixel_index, btnC, btnD, sw[0], task_a_pixel_data);
     wire [15:0] task_b_pixel_data;
     taskB taskB(clk, sw[0], sw[11], btnR, btnL, btnC, pixel_index, task_b_pixel_data);
     wire [15:0] task_c_pixel_data;                                                                        
@@ -154,8 +156,7 @@ module Top_Student (
     wire [15:0] task_d_pixel_data;
     taskD taskD(clk_6p25m, btnC, pixel_index, task_d_pixel_data);
     
-    wire taskEActive = 0;
-    taskE taskE(taskEActive, clk, seg, dp, an);
+    taskE taskE(clk, sw[8], sw[15:13], seg, dp, an, paint_seg);
     
     // ---------- state machine ----------
     reg [31:0] state = 32'b0;
@@ -228,6 +229,10 @@ module Top_Student (
                     pixel_data <= task_d_pixel_data;
                     led_out[3] <= 1;
                 end
+            32'h4E:
+                begin
+                    pixel_data <= colour_chooser;
+                end
             default: 
                 begin
                     pixel_data <= white;
@@ -236,6 +241,5 @@ module Top_Student (
         endcase
     end
     assign led = led_out;
-    assign taskEActive = state == 32'h4E;
     
 endmodule
