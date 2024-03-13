@@ -1,26 +1,5 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 08.03.2024 16:14:40
-// Design Name: 
-// Module Name: Task4c
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-
-module taskC(
+`module Taskc(
+    input sw,
     input pb,
     input clk,
     input [12:0] pixel_index,
@@ -44,6 +23,8 @@ module taskC(
     assign oleddata = data;
      //L can go in and back, but think of doing it again, have init = 0 or 1 inside data
     always @ (posedge clk)
+    begin
+    if(sw == 1)
     begin
     if(pbdone == 1)
         begin
@@ -317,9 +298,14 @@ module taskC(
                pbdone = 1;
                init = 1;
                end
-           end                  
+        end                  
+    end
+    end
+    else
+        begin
+        data = 16'h0000;
+        init = 0;
+        pbdone = 1;
         end
     end
-
-
 endmodule
