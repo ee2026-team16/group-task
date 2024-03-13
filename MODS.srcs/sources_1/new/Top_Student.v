@@ -47,6 +47,7 @@ module Top_Student (
     
     // ---------- oled ----------
     // constants
+    reg [15:0] black = 16'b0;
     reg [15:0] white = 16'b11111_111111_11111;
     
     //  inputs
@@ -118,6 +119,9 @@ module Top_Student (
     wire enable; // disable = 0
     assign enable = sw[8];
     
+    wire paint_reset;
+    assign paint_reset = sw[8] == 0 || right;
+    
     //  outputs
     wire [15:0] colour_chooser;
     
@@ -127,7 +131,7 @@ module Top_Student (
         .mouse_x(xpos),
         .mouse_y(ypos),
         .mouse_l(left),
-        .reset(right),
+        .reset(paint_reset),
         .pixel_index(pixel_index),
         .enable(enable),
         .clk_100M(clk),
@@ -139,24 +143,20 @@ module Top_Student (
 //        .led(led),
         .colour_chooser(colour_chooser)
     );
-    
-//    always @ (posedge clk_25m)
-//    begin
-//        pixel_data <= colour_chooser;
-//    end
 
     // ---------- tasks ----------
     
     wire [15:0] task_a_pixel_data;
-    taskA taskA(clk, clk_25m, pixel_index, btnC, btnD, sw[0], task_a_pixel_data);
+    taskA taskA(clk, clk_25m, pixel_index, btnC, btnD, sw[12], task_a_pixel_data);
     wire [15:0] task_b_pixel_data;
     taskB taskB(clk, sw[0], sw[11], btnR, btnL, btnC, pixel_index, task_b_pixel_data);
     wire [15:0] task_c_pixel_data;                                                                        
-    taskC taskC(btnD, clk, pixel_index, task_c_pixel_data);
+    taskC taskC(sw[10], btnD, clk, pixel_index, task_c_pixel_data);
     wire [15:0] task_d_pixel_data;
     taskD taskD(clk_6p25m, btnC, pixel_index, task_d_pixel_data);
     
-    taskE taskE(clk, sw[8], sw[15:13], seg, dp, an, paint_seg);
+    wire success;
+    taskE taskE(clk, sw[8], sw[15:13], seg, dp, an, btnC, paint_seg, success);
     
     // ---------- state machine ----------
     reg [31:0] state = 32'b0;
@@ -231,11 +231,18 @@ module Top_Student (
                 end
             32'h4E:
                 begin
-                    pixel_data <= colour_chooser;
+                    if (success == 0)
+                        begin
+                            pixel_data <= colour_chooser;
+                        end
+                    else
+                        begin
+                            pixel_data <= 16'h07E0;
+                        end
                 end
             default: 
                 begin
-                    pixel_data <= white;
+                    pixel_data <= black;
                     led_out <= 16'b0000_0000_0000_0000;
                 end
         endcase

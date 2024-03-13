@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Taskc(
+module taskC(
     input sw,
     input pb,
     input clk,
@@ -331,4 +331,3 @@ module Taskc(
         end
     end
 endmodule
-
