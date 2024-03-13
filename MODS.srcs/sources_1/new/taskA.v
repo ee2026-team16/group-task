@@ -10,12 +10,12 @@ module taskA(input basys_clock, clk_25MHz, input [12:0] pixel_index, input btnC,
     parameter GREEN = 16'b00000_111111_00000;
     
     wire clk_1000;
-    flexible_clock_module flexible_clock_1000 (basys_clock, 49999, clk_1000);
+    flexible_clock flexible_clock_1000 (basys_clock, 49999, clk_1000);
     
     reg [31:0] x, y;
-    reg btnC_pressed = 0, btnD_pressed = 0, btnD_previous = 0;
+    reg btnC_pressed = 0, btnD_pressed = 0;
     reg [1:0] center = 0;
-    reg [31:0] count = 0, half_sec_count = 0, btnD_count = 0;
+    reg [31:0] count = 0, half_sec_count = 0;
     
     wire debounced_btnD;
     debounce(clk_1000, btnD, debounced_btnD);
@@ -29,7 +29,6 @@ module taskA(input basys_clock, clk_25MHz, input [12:0] pixel_index, input btnC,
             btnC_pressed = 0;
             btnD_pressed = 0;
             half_sec_count = 0;
-            btnD_count = 0;
             count = 0;
             center = 0;
         end
@@ -38,12 +37,8 @@ module taskA(input basys_clock, clk_25MHz, input [12:0] pixel_index, input btnC,
         end 
         
         half_sec_count <= (count == 12500000) ? ((half_sec_count == 11) ? 0 : half_sec_count + 1) : half_sec_count;
-        
         count <= (count == 12500001) ? 0 : ((btnC_pressed) ? count + 1: count);
-        //line_count <= (count == 0) ? ((line_count == 6142) ? 0 : line_count + 1) : line_count;
-       
-        btnD_count = (btnD_count == 6250000) ? 0 : ((btnD_pressed) ? btnD_count + 1 : 0); 
-        center <= (btnD_count == 0 && btnD_pressed) ? ((center == 3 || center == 0) ? 1 : center + 1) : center;
+        center <= (debounced_btnD && btnC_pressed) ? ((center == 3 || center == 0) ? 1 : center + 1) : center;
         
        
         if ((x == 2 || x == 61 || y == 2 || y == 93) && !(x < 2 || x > 61 || y < 2 || y > 93)) begin
@@ -71,11 +66,5 @@ module taskA(input basys_clock, clk_25MHz, input [12:0] pixel_index, input btnC,
             oled_data <= BLACK;
         end
         
-        if (!debounced_btnD && btnD_previous && btnC_pressed) begin
-            btnD_pressed <= 1;
-            center <= 0;
-        end
-        
-        btnD_previous <= debounced_btnD;
     end
 endmodule
