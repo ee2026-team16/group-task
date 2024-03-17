@@ -54,7 +54,7 @@ module taskE(
                     
                     success <= 0;
                 end
-            else if (sw[15] == 1)
+            else if (sw[15] == 1) // AN1 shows paint_seg
                 begin
                     counter <= (counter + 1) % 4;
                                                                     
@@ -87,7 +87,7 @@ module taskE(
                     
                     success <= success ? 1 : (btnC && paint_seg == number1);
                 end
-            else if (sw[14] == 1)
+            else if (sw[14] == 1) // AN0 shows paint_seg
                 begin
                     counter <= (counter + 1) % 4;
                                                     
@@ -120,7 +120,7 @@ module taskE(
                     
                     success <= success ? 1 : (btnC && paint_seg == number6);
                 end
-            else if (sw[13] == 1)
+            else if (sw[13] == 1) // AN[1:0] OFF
                 begin
                     counter <= (counter + 1) % 4;
                                                     
@@ -151,7 +151,7 @@ module taskE(
                             end
                     endcase
                 end
-            else
+            else // all SW[15:13] are OFF
                 begin
                     counter <= (counter + 1) % 4;
                                     
@@ -181,6 +181,8 @@ module taskE(
                                 dp <= 1;
                             end
                     endcase
+                    
+                    success <= success ? 1 : btnC;
                 end
         end
 endmodule
