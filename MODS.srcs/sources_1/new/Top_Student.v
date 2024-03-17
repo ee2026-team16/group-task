@@ -153,7 +153,7 @@ module Top_Student (
     wire [15:0] task_c_pixel_data;                                                                        
     taskC taskC(sw[10], btnD, clk, pixel_index, task_c_pixel_data);
     wire [15:0] task_d_pixel_data;
-    taskD taskD(clk_6p25m, btnC, pixel_index, task_d_pixel_data);
+    taskD taskD(clk, clk_6p25m, sw[0], sw[9], btnC, btnR, btnL, btnU, pixel_index, task_d_pixel_data);
     
     wire success;
     taskE taskE(clk, sw[8], sw[15:13], seg, dp, an, btnC, paint_seg, success);
@@ -237,7 +237,8 @@ module Top_Student (
                         end
                     else
                         begin
-                            pixel_data <= 16'h07E0;
+                            pixel_data <= 16'h07E0; // green = success
+                            // insert animation code here
                         end
                 end
             default: 
