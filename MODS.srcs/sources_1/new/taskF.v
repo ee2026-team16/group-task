@@ -46,7 +46,7 @@ module taskF(
     if(btn_pressed == 1)
         begin
             count = count + 1;
-            if(count >= 12999999)
+            if(count >= 12499999)
                 begin
                     count = 0;
                     xindex <= (xindex == 80) ?16 : xindex + 8;
