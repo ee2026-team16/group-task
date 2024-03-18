@@ -84,6 +84,7 @@ module taskF(
         begin
         data = 16'h0000;
         xindex = 16;
+        colour = 0;
         end
     end
       
