@@ -157,6 +157,8 @@ module Top_Student (
     
     wire success;
     taskE taskE(clk, sw[8], sw[15:13], seg, dp, an, btnC, paint_seg, success);
+    wire [15:0] task_e_animation_pixel_data;
+    taskEAnimation taskEAnimation(clk, pixel_index, task_e_animation_pixel_data);
     
     // ---------- state machine ----------
     reg [31:0] state = 32'b0;
@@ -237,8 +239,7 @@ module Top_Student (
                         end
                     else
                         begin
-                            pixel_data <= 16'h07E0; // green = success
-                            // insert animation code here
+                            pixel_data <= task_e_animation_pixel_data;
                         end
                 end
             default: 
