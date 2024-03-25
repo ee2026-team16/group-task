@@ -11,7 +11,6 @@ module defuse_sequence(input basys_clock, clk_25MHz, btnC, btnU, btnL, btnR, btn
     parameter GREEN = 16'b00000_111111_00000;
     parameter GREY = 16'b01000_010000_01000;
     wire clk_1000;
-    flexible_clock flexible_clock_1000 (basys_clock, 49999, clk_1000);
     
     reg [31:0] x, y;
     reg [31:0] state = 1;
@@ -22,8 +21,6 @@ module defuse_sequence(input basys_clock, clk_25MHz, btnC, btnU, btnL, btnR, btn
     random_number_generator unit(basys_clock, state, generated_state);
    
     reg circleC, circleU, circleL, circleR, circleD;
-    wire debounced_btnD;
-    debounce(clk_1000, btnD, debounced_btnD);
     
     always @ (posedge clk_25MHz)
     begin
