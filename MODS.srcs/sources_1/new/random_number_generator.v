@@ -20,11 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module random_number_generator(input basys_clock, input [15:0] prev_number, output reg [15:0] new_number);
-
+module random_number_generator(input basys_clock, input [31:0] prev_number, output reg [31:0] new_number);
     always @ (posedge basys_clock)
     begin
-        new_number[15:0] <= {(prev_number[5]^prev_number[3]^prev_number[2]^prev_number[0]),prev_number[12:1],prev_number[15:13]};     
+        new_number = prev_number ^ ((prev_number << 13 & 32'hFFFFFFFF));
+        new_number = new_number ^ ((prev_number >> 17 & 32'hFFFFFFFF));
+        new_number = new_number ^ ((prev_number << 5 & 32'hFFFFFFFF));
     end
     
 endmodule
